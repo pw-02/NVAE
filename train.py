@@ -345,7 +345,7 @@ if __name__ == '__main__':
     parser.add_argument('--data', type=str, default='C:\\Users\\pw\\projects\\NVAE\\data\\imagenet-lmdb',
                         help='location of the data corpus')
     # optimization
-    parser.add_argument('--batch_size', type=int, default=4,
+    parser.add_argument('--batch_size', type=int, default=32,
                         help='batch size per GPU')
     parser.add_argument('--learning_rate', type=float, default=1e-2,
                         help='init learning rate')
