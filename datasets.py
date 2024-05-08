@@ -196,7 +196,7 @@ def get_loaders_eval(dataset, args):
     elif dataset.startswith('imagenet'):
         num_classes = 1
         resize = int(dataset.split('_')[1])
-        assert args.data.replace('/', '')[-3:] == dataset.replace('/', '')[-3:], 'the size should match'
+        #assert args.data.replace('/', '')[-3:] == dataset.replace('/', '')[-3:], 'the size should match'
         train_transform, valid_transform = _data_transforms_generic(resize)
         train_data = LMDBDataset(root=args.data, name='imagenet-oord', train=True, transform=train_transform)
         valid_data = LMDBDataset(root=args.data, name='imagenet-oord', train=False, transform=valid_transform)
@@ -206,6 +206,12 @@ def get_loaders_eval(dataset, args):
         train_transform, valid_transform = _data_transforms_generic(resize)
         train_data = LMDBDataset(root=args.data, name='ffhq', train=True, transform=train_transform)
         valid_data = LMDBDataset(root=args.data, name='ffhq', train=False, transform=valid_transform)
+    elif dataset.startswith('metfaces'):
+        num_classes = 1
+        resize = 256
+        train_transform, valid_transform = _data_transforms_generic(resize)
+        train_data = LMDBDataset(root=args.data, name='metfaces', train=True, transform=train_transform)
+        valid_data = LMDBDataset(root=args.data, name='metfaces', train=False, transform=valid_transform)
     else:
         raise NotImplementedError
 
@@ -217,12 +223,12 @@ def get_loaders_eval(dataset, args):
     train_queue = torch.utils.data.DataLoader(
         train_data, batch_size=args.batch_size,
         shuffle=(train_sampler is None),
-        sampler=train_sampler, pin_memory=True, num_workers=8, drop_last=True)
+        sampler=train_sampler, pin_memory=True, num_workers=0, drop_last=True)
 
     valid_queue = torch.utils.data.DataLoader(
         valid_data, batch_size=args.batch_size,
         shuffle=(valid_sampler is None),
-        sampler=valid_sampler, pin_memory=True, num_workers=1, drop_last=False)
+        sampler=valid_sampler, pin_memory=True, num_workers=0, drop_last=False)
 
     return train_queue, valid_queue, num_classes
 

@@ -120,7 +120,7 @@ def main(args):
             writer.add_scalar('val/bpd_log_p', valid_neg_log_p * bpd_coeff, epoch)
             writer.add_scalar('val/bpd_elbo', valid_nelbo * bpd_coeff, epoch)
 
-        save_freq = int(np.ceil(args.epochs / 100))
+        save_freq = int(np.ceil(args.epochs / 10))
         if epoch % save_freq == 0 or epoch == (args.epochs - 1):
             if args.global_rank == 0:
                 logging.info('saving the model.')
@@ -319,8 +319,8 @@ def init_processes(rank, size, fn, args):
     """ Initialize the distributed environment. """
     os.environ['MASTER_ADDR'] = args.master_address
     os.environ['MASTER_PORT'] = '6020'
-    torch.cuda.set_device(args.local_rank)
-    dist.init_process_group(backend='nccl', init_method='env://', rank=rank, world_size=size)
+    torch.cuda.device(args.local_rank)
+    dist.init_process_group(backend='gloo', init_method='env://', rank=rank, world_size=size)
     fn(args)
     cleanup()
 
@@ -332,20 +332,20 @@ def cleanup():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('encoder decoder examiner')
     # experimental results
-    parser.add_argument('--root', type=str, default='/tmp/nasvae/expr',
+    parser.add_argument('--root', type=str, default='results',
                         help='location of the results')
     parser.add_argument('--save', type=str, default='exp',
                         help='id used for storing intermediate results')
     # data
-    parser.add_argument('--dataset', type=str, default='mnist',
+    parser.add_argument('--dataset', type=str, default='imagenet_32',
                         choices=['cifar10', 'mnist', 'omniglot', 'celeba_64', 'celeba_256',
                                  'imagenet_32', 'ffhq', 'lsun_bedroom_128', 'stacked_mnist',
                                  'lsun_church_128', 'lsun_church_64'],
                         help='which dataset to use')
-    parser.add_argument('--data', type=str, default='/tmp/nasvae/data',
+    parser.add_argument('--data', type=str, default='C:\\Users\\pw\\projects\\NVAE\\data\\imagenet-lmdb',
                         help='location of the data corpus')
     # optimization
-    parser.add_argument('--batch_size', type=int, default=200,
+    parser.add_argument('--batch_size', type=int, default=4,
                         help='batch size per GPU')
     parser.add_argument('--learning_rate', type=float, default=1e-2,
                         help='init learning rate')
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay_norm_anneal', action='store_true', default=False,
                         help='This flag enables annealing the lambda coefficient from '
                              '--weight_decay_norm_init to --weight_decay_norm.')
-    parser.add_argument('--epochs', type=int, default=200,
+    parser.add_argument('--epochs', type=int, default=50,
                         help='num of training epochs')
     parser.add_argument('--warmup_epochs', type=int, default=5,
                         help='num of training epochs in which lr is warmed up')
@@ -383,7 +383,7 @@ if __name__ == '__main__':
     # latent variables
     parser.add_argument('--num_latent_scales', type=int, default=1,
                         help='the number of latent scales')
-    parser.add_argument('--num_groups_per_scale', type=int, default=10,
+    parser.add_argument('--num_groups_per_scale', type=int, default=5,
                         help='number of groups of latent variables per scale')
     parser.add_argument('--num_latent_per_group', type=int, default=20,
                         help='number of channels in latent variables per group')
@@ -392,7 +392,7 @@ if __name__ == '__main__':
     parser.add_argument('--min_groups_per_scale', type=int, default=1,
                         help='the minimum number of groups per scale.')
     # encoder parameters
-    parser.add_argument('--num_channels_enc', type=int, default=32,
+    parser.add_argument('--num_channels_enc', type=int, default=8,
                         help='number of channels in encoder')
     parser.add_argument('--num_preprocess_blocks', type=int, default=2,
                         help='number of preprocessing blocks')
@@ -401,7 +401,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_cell_per_cond_enc', type=int, default=1,
                         help='number of cell for each conditional in encoder')
     # decoder parameters
-    parser.add_argument('--num_channels_dec', type=int, default=32,
+    parser.add_argument('--num_channels_dec', type=int, default=8,
                         help='number of channels in decoder')
     parser.add_argument('--num_postprocess_blocks', type=int, default=2,
                         help='number of postprocessing blocks')
@@ -457,7 +457,8 @@ if __name__ == '__main__':
     else:
         # for debugging
         print('starting in debug mode')
-        args.distributed = True
-        init_processes(0, size, main, args)
+        args.distributed = False
+        #init_processes(0, size, main, args)
+        main(args)
 
 

@@ -8,9 +8,10 @@ import argparse
 import torch
 import lmdb
 import os
-
+import io
+from PIL import Image
 from tfrecord.torch.dataset import TFRecordDataset
-
+import numpy as np
 
 def main(dataset, split, tfr_path, lmdb_path):
     assert split in {'train', 'validation'}
@@ -23,7 +24,7 @@ def main(dataset, split, tfr_path, lmdb_path):
         lmdb_path = os.path.join(lmdb_path, '%s.lmdb' % split)
         tfrecord_path_template = os.path.join(tfr_path, '%s/%s-r08-s-%04d-of-%04d.tfrecords')
     elif dataset == 'imagenet-oord_32':
-        num_shards = {'train': 2000, 'validation': 80}[split]
+        num_shards = {'train': 20, 'validation': 1}[split]
         # imagenet_oord_lmdb_path += '_32'
         lmdb_path = os.path.join(lmdb_path, '%s.lmdb' % split)
         tfrecord_path_template = os.path.join(tfr_path, '%s/%s-r05-s-%04d-of-%04d.tfrecords')
@@ -36,7 +37,10 @@ def main(dataset, split, tfr_path, lmdb_path):
         raise NotImplementedError
 
     # create lmdb
-    env = lmdb.open(lmdb_path, map_size=1e12)
+    new_map_size = 1024 * 1024 * 1024  # 1 GB
+
+    # create lmdb
+    env = lmdb.open(lmdb_path, map_size=new_map_size)
     count = 0
     with env.begin(write=True) as txn:
         for tf_ind in range(num_shards):
@@ -49,7 +53,11 @@ def main(dataset, split, tfr_path, lmdb_path):
 
             # put the data in lmdb
             for data in loader:
-                im = data['data'][0].cpu().numpy()
+                # Convert bytes back to numpy array
+                im = np.frombuffer(data['data'][0], dtype="uint8")
+                # Reshape the numpy array to its original shape
+                # im = img_array.reshape((64,63,3))
+                # im = data['data'][0].cpu().numpy()
                 txn.put(str(count).encode(), im)
                 count += 1
                 if count % 100 == 0:
@@ -63,9 +71,9 @@ if __name__ == '__main__':
     # experimental results
     parser.add_argument('--dataset', type=str, default='imagenet-oord_32',
                         help='dataset name', choices=['imagenet-oord_32', 'imagenet-oord_32', 'celeba'])
-    parser.add_argument('--tfr_path', type=str, default='/data1/datasets/imagenet-oord/mnt/host/imagenet-oord-tfr',
+    parser.add_argument('--tfr_path', type=str, default='data\\imagenet-oord_32',
                         help='location of TFRecords')
-    parser.add_argument('--lmdb_path', type=str, default='/data1/datasets/imagenet-oord/imagenet-oord-lmdb_32',
+    parser.add_argument('--lmdb_path', type=str, default='data\\imagenet',
                         help='target location for storing lmdb files')
     parser.add_argument('--split', type=str, default='train',
                         help='training or validation split', choices=['train', 'validation'])
