@@ -342,7 +342,7 @@ if __name__ == '__main__':
                                  'imagenet_32', 'ffhq', 'lsun_bedroom_128', 'stacked_mnist',
                                  'lsun_church_128', 'lsun_church_64'],
                         help='which dataset to use')
-    parser.add_argument('--data', type=str, default='data/metfaces-lmdb',
+    parser.add_argument('--data', type=str, default='data/imagenet-lmdb',
                         help='location of the data corpus')
     # optimization
     parser.add_argument('--batch_size', type=int, default=32,
