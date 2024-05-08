@@ -342,7 +342,7 @@ if __name__ == '__main__':
                                  'imagenet_32', 'ffhq', 'lsun_bedroom_128', 'stacked_mnist',
                                  'lsun_church_128', 'lsun_church_64'],
                         help='which dataset to use')
-    parser.add_argument('--data', type=str, default='data/imagenet-lmdb',
+    parser.add_argument('--data', type=str, default='data/metfaces-lmdb',
                         help='location of the data corpus')
     # optimization
     parser.add_argument('--batch_size', type=int, default=32,
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay_norm_anneal', action='store_true', default=False,
                         help='This flag enables annealing the lambda coefficient from '
                              '--weight_decay_norm_init to --weight_decay_norm.')
-    parser.add_argument('--epochs', type=int, default=10,
+    parser.add_argument('--epochs', type=int, default=50,
                         help='num of training epochs')
     parser.add_argument('--warmup_epochs', type=int, default=5,
                         help='num of training epochs in which lr is warmed up')

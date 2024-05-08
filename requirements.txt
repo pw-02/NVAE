@@ -6,3 +6,4 @@ tensorboard
 tensorboardX
 lmdb
 tfrecord
+scipy
