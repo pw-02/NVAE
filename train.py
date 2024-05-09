@@ -334,15 +334,15 @@ if __name__ == '__main__':
     # experimental results
     parser.add_argument('--root', type=str, default='results',
                         help='location of the results')
-    parser.add_argument('--save', type=str, default='ciafr10_exp',
+    parser.add_argument('--save', type=str, default='exp-imagnet',
                         help='id used for storing intermediate results')
     # data
-    parser.add_argument('--dataset', type=str, default='cifar10',
+    parser.add_argument('--dataset', type=str, default='imagenet_32',
                         choices=['cifar10', 'mnist', 'omniglot', 'celeba_64', 'celeba_256',
                                  'imagenet_32', 'ffhq', 'lsun_bedroom_128', 'stacked_mnist',
                                  'lsun_church_128', 'lsun_church_64'],
                         help='which dataset to use')
-    parser.add_argument('--data', type=str, default='data',
+    parser.add_argument('--data', type=str, default='data/imagenet-lmdb',
                         help='location of the data corpus')
     # optimization
     parser.add_argument('--batch_size', type=int, default=64,
