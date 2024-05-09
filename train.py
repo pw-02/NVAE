@@ -334,7 +334,7 @@ if __name__ == '__main__':
     # experimental results
     parser.add_argument('--root', type=str, default='results',
                         help='location of the results')
-    parser.add_argument('--save', type=str, default='exp',
+    parser.add_argument('--save', type=str, default='ciafr10_exp',
                         help='id used for storing intermediate results')
     # data
     parser.add_argument('--dataset', type=str, default='cifar10',
