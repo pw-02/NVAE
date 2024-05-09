@@ -30,13 +30,6 @@ def num_samples(dataset, train):
     else:
         raise NotImplementedError('dataset %s is unknown' % dataset)
 
-def loads_data(buf):
-    """
-    Args:
-        buf: the output of `dumps`.
-    """
-    return pickle.loads(buf)
-
 class LMDBDataset(data.Dataset):
     def __init__(self, root, name='', train=True, transform=None, is_encoded=False):
         self.train = train
@@ -46,62 +39,28 @@ class LMDBDataset(data.Dataset):
             lmdb_path = os.path.join(root, 'train.lmdb')
         else:
             lmdb_path = os.path.join(root, 'validation.lmdb')
-        self.data_lmdb = lmdb.open(lmdb_path, subdir=osp.isdir(lmdb_path),
-                             readonly=True, lock=False,
-                             readahead=False, meminit=False)
-        with self.data_lmdb.begin(write=False) as txn:
-            self.length = loads_data(txn.get(b'__len__'))
-            self.keys = loads_data(txn.get(b'__keys__'))
-        # self.data_lmdb = lmdb.open(lmdb_path, readonly=True, max_readers=1, lock=False, readahead=False, meminit=False)
-        
+        self.data_lmdb = lmdb.open(lmdb_path, readonly=True, max_readers=1,
+                                   lock=False, readahead=False, meminit=False)
         self.is_encoded = is_encoded
+
     def __getitem__(self, index):
         target = [0]
         with self.data_lmdb.begin(write=False, buffers=True) as txn:
-            data = txn.get(self.keys[index])
-        unpacked = loads_data(data)
-            # load img
-        imgbuf = unpacked[0]
-        buf = six.BytesIO()
-        buf.write(imgbuf)
-        buf.seek(0)
-        img = Image.open(buf).convert('RGB')
-
-        # load label
-        target = unpacked[1]
-        # if self.is_encoded:
-        #     img = Image.open(io.BytesIO(data))
-        #     img = img.convert('RGB')
-        # else:
-        #     img = np.asarray(data, dtype=np.uint8)
-        #     # assume data is RGB
-        #     size = int(np.sqrt(len(img) / 3))
-        #     img = np.reshape(img, (size, size, 3))
-        #     img = Image.fromarray(img, mode='RGB')
+            data = txn.get(str(index).encode())
+            if self.is_encoded:
+                img = Image.open(io.BytesIO(data))
+                img = img.convert('RGB')
+            else:
+                img = np.asarray(data, dtype=np.uint8)
+                # assume data is RGB
+                size = int(np.sqrt(len(img) / 3))
+                img = np.reshape(img, (size, size, 3))
+                img = Image.fromarray(img, mode='RGB')
 
         if self.transform is not None:
             img = self.transform(img)
 
         return img, target
-    # def __getitem__(self, index):
-    #     target = [0]
-    #     with self.data_lmdb.begin(write=False, buffers=True) as txn:
-    #         data = txn.get(str(index).encode())
-    #         if self.is_encoded:
-    #             img = Image.open(io.BytesIO(data))
-    #             img = img.convert('RGB')
-    #         else:
-    #             img = np.asarray(data, dtype=np.uint8)
-    #             # assume data is RGB
-    #             size = int(np.sqrt(len(img) / 3))
-    #             img = np.reshape(img, (size, size, 3))
-    #             img = Image.fromarray(img, mode='RGB')
-
-    #     if self.transform is not None:
-    #         img = self.transform(img)
-
-    #     return img, target
 
     def __len__(self):
-        return  self.length
-        # return num_samples(self.name, self.train)
+        return num_samples(self.name, self.train)
