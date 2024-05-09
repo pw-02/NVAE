@@ -30,12 +30,6 @@ def num_samples(dataset, train):
     else:
         raise NotImplementedError('dataset %s is unknown' % dataset)
 
-def loads_data(buf):
-    """
-    Args:
-        buf: the output of `dumps`.
-    """
-    return pickle.loads(buf)
 
 class LMDBDataset(data.Dataset):
     def __init__(self, root, name='', train=True, transform=None, is_encoded=False):
@@ -46,13 +40,8 @@ class LMDBDataset(data.Dataset):
             lmdb_path = os.path.join(root, 'train.lmdb')
         else:
             lmdb_path = os.path.join(root, 'validation.lmdb')
-        
-        #self.data_lmdb = lmdb.open(lmdb_path, subdir=osp.isdir(lmdb_path),readonly=True, lock=False, readahead=False, meminit=False)
-        self.data_lmdb = lmdb.open(lmdb_path, readonly=True, max_readers=1,lock=False, readahead=False, meminit=False)
-        # with self.data_lmdb.begin(write=False) as txn:
-        #     self.length = loads_data(txn.get(b'__len__'))
-        #     self.keys = loads_data(txn.get(b'__keys__'))
-        
+        self.data_lmdb = lmdb.open(lmdb_path, readonly=True, max_readers=1,
+                                   lock=False, readahead=False, meminit=False)
         self.is_encoded = is_encoded
 
     def __getitem__(self, index):
