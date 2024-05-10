@@ -315,6 +315,7 @@ def test_vae_fid(model, args, total_fid_samples):
     return fid
 
 
+
 def init_processes(rank, size, fn, args):
     """ Initialize the distributed environment. """
     os.environ['MASTER_ADDR'] = args.master_address

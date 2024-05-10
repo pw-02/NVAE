@@ -7,3 +7,4 @@ data/
 results/
 imagenetlmbtest/data.mdb
 imagenetlmbtest/lock.mdb
+gen_images/

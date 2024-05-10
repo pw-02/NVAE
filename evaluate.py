@@ -11,7 +11,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 from time import time
-
+from PIL import Image
 from torch.multiprocessing import Process
 from torch.cuda.amp import autocast
 
@@ -97,6 +97,48 @@ def main(eval_args):
         args.num_process_per_node, args.num_proc_node = eval_args.world_size, 1   # evaluate only one 1 node
         fid = test_vae_fid(model, args, total_fid_samples=50000)
         logging.info('fid is %f' % fid)
+    
+    elif eval_args.eval_mode == 'evaluate_is':
+        # Parameters for generation
+        total_images = 50000  # Total number of images to generate
+        batch_size = 64  # Adjust batch size according to your hardware
+        num_batches = total_images // batch_size  # Determine the number of batches
+
+        generated_images = []  # Store generated images
+        # Generate images in batches
+        with torch.no_grad():
+            for batch_num in range(num_batches):
+                start_time = time()
+                # Use autocast if you require mixed-precision for performance
+                with autocast():
+                    logits = model.sample(batch_size, eval_args.temp)  # Assuming `model.sample` generates images
+                    # Convert logits to actual images (if needed)
+                    # This part depends on your model's output structure
+                    if hasattr(model, "decoder_output"):
+                        images = model.decoder_output(logits)
+                        images = images.sample() if hasattr(images, "sample") else images
+                    else:
+                        images = logits
+                    # Move images to CPU and convert to NumPy
+                    images_np = images.cpu().numpy()
+                    # Save each image in the batch
+                    for i, img in enumerate(images_np):
+                        # Convert the image from a tensor/array to a PIL Image
+                        img_pil = Image.fromarray((img * 255).astype(np.uint8).transpose(1, 2, 0))
+                        # Save as PNG (could be JPEG or another format if preferred)
+                        img_path = os.path.join("gen_images\\cifar10", f'image_{batch_num * batch_size + i + 1}.png')
+                        img_pil.save(img_path)
+
+        end_time = time()
+        print(f"Generated and saved batch {batch_num + 1}/{num_batches} in {end_time - start_time:.2f} seconds")
+
+
+        # bn_eval_mode = not eval_args.readjust_bn
+        # set_bn(model, bn_eval_mode, num_samples=2, t=eval_args.temp, iter=500)
+        # args.fid_dir = eval_args.fid_dir
+        # args.num_process_per_node, args.num_proc_node = eval_args.world_size, 1   # evaluate only one 1 node
+        # fid = test_vae_fid(model, args, total_fid_samples=50000)
+        # logging.info('fid is %f' % fid)
     else:
         bn_eval_mode = not eval_args.readjust_bn
         total_samples = 50000 // eval_args.world_size          # num images per gpu
@@ -118,7 +160,7 @@ def main(eval_args):
                 end = time()
                 logging.info('sampling time per batch: %0.3f sec', (end - start))
 
-                visualize = False
+                visualize = True
                 if visualize:
                     output_tiled = utils.tile_image(output_img, n).cpu().numpy().transpose(1, 2, 0)
                     output_tiled = np.asarray(output_tiled * 255, dtype=np.uint8)
@@ -135,23 +177,23 @@ def main(eval_args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('encoder decoder examiner')
     # experimental results
-    parser.add_argument('--checkpoint', type=str, default='/tmp/expr/checkpoint.pt',
+    parser.add_argument('--checkpoint', type=str, default='results/eval-exp-cifar10/checkpoint.pt',
                         help='location of the checkpoint')
-    parser.add_argument('--save', type=str, default='/tmp/expr',
+    parser.add_argument('--save', type=str, default='eval_results',
                         help='location of the checkpoint')
-    parser.add_argument('--eval_mode', type=str, default='sample', choices=['sample', 'evaluate', 'evaluate_fid'],
+    parser.add_argument('--eval_mode', type=str, default='evaluate_fid', choices=['sample', 'evaluate', 'evaluate_fid'],
                         help='evaluation mode. you can choose between sample or evaluate.')
     parser.add_argument('--eval_on_train', action='store_true', default=False,
                         help='Settings this to true will evaluate the model on training data.')
-    parser.add_argument('--data', type=str, default='/tmp/data',
+    parser.add_argument('--data', type=str, default='data',
                         help='location of the data corpus')
     parser.add_argument('--readjust_bn', action='store_true', default=False,
                         help='adding this flag will enable readjusting BN statistics.')
     parser.add_argument('--temp', type=float, default=0.7,
                         help='The temperature used for sampling.')
-    parser.add_argument('--num_iw_samples', type=int, default=1000,
+    parser.add_argument('--num_iw_samples', type=int, default=50000,
                         help='The number of IW samples used in test_ll mode.')
-    parser.add_argument('--fid_dir', type=str, default='/tmp/fid-stats',
+    parser.add_argument('--fid_dir', type=str, default='fid-stats',
                         help='path to directory where fid related files are stored')
     parser.add_argument('--batch_size', type=int, default=0,
                         help='Batch size used during evaluation. If set to zero, training batch size is used.')
