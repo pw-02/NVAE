@@ -22,7 +22,7 @@ def num_samples(dataset, train):
     elif dataset == 'celeba64':
         return 162770 if train else 19867
     elif dataset == 'imagenet-oord':
-        return 1281147 if train else 50000
+        return 100000 if train else 10000
     elif dataset == 'ffhq':
         return 63000 if train else 7000
     elif dataset == 'metfaces':
@@ -47,8 +47,8 @@ class LMDBDataset(data.Dataset):
         else:
             lmdb_path = os.path.join(root, 'validation.lmdb')
         
-        #self.data_lmdb = lmdb.open(lmdb_path, subdir=osp.isdir(lmdb_path),readonly=True, lock=False, readahead=False, meminit=False)
-        self.data_lmdb = lmdb.open(lmdb_path, readonly=True, max_readers=1,lock=False, readahead=False, meminit=False)
+        self.data_lmdb = lmdb.open(lmdb_path, subdir=osp.isdir(lmdb_path),readonly=True, lock=False, readahead=False, meminit=False)
+        #self.data_lmdb = lmdb.open(lmdb_path, readonly=True, max_readers=1,lock=False, readahead=False, meminit=False)
         # with self.data_lmdb.begin(write=False) as txn:
         #     self.length = loads_data(txn.get(b'__len__'))
         #     self.keys = loads_data(txn.get(b'__keys__'))

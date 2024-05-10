@@ -7,13 +7,13 @@ import numpy as np
 # Directory locations
 train_dir = "C:\\Users\\pw\\projects\\datasets\\ImageNet\\imagenet\\train"
 # LMDB output directory
-lmdb_path = "imagenetlmbtest"
+lmdb_path = "imagenetlmbtest-train"
 os.makedirs(lmdb_path, exist_ok=True)
 
 def main():
 
     # Create LMDB environment
-    new_map_size = 1024 * 1024 * 1024  # 1 GB
+    new_map_size = 1024 * 1024 * 1024 *3 # 1 GB
     env = lmdb.open(lmdb_path, map_size=new_map_size)  # Adjust map_size if needed
     count = 0
     class_dirs = os.listdir(train_dir)
@@ -24,10 +24,14 @@ def main():
                 image_path = os.path.join(class_path, image_name)
 
                 image = Image.open(image_path)
+                if image.mode == "L":
+                    image = image.convert("RGB")
+
                 image = np.array(image)
-                # image_data = image_data.reshape(image_data.size[1], image_data.size[0], 3)
+                # image = image.resize(size=(128, 128), resample=Image.BILINEAR)
+                # image = np.array(image).reshape(image.size[1], image.size[0],3)
                 # label = class_name
-                txn.put(str(idx).encode(), image)
+                txn.put(str(count).encode(), image)
                 count += 1
                 print(count)
                 # if count == 300:
