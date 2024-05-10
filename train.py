@@ -335,15 +335,15 @@ if __name__ == '__main__':
     # experimental results
     parser.add_argument('--root', type=str, default='results',
                         help='location of the results')
-    parser.add_argument('--save', type=str, default='exp-cifar10',
+    parser.add_argument('--save', type=str, default='exp-imagenet_32',
                         help='id used for storing intermediate results')
     # data
-    parser.add_argument('--dataset', type=str, default='cifar10',
+    parser.add_argument('--dataset', type=str, default='imagenet_32',
                         choices=['cifar10', 'mnist', 'omniglot', 'celeba_64', 'celeba_256',
                                  'imagenet_32', 'ffhq', 'lsun_bedroom_128', 'stacked_mnist',
                                  'lsun_church_128', 'lsun_church_64', 'metfaces'],
                         help='which dataset to use')
-    parser.add_argument('--data', type=str, default='data\\imagenet',
+    parser.add_argument('--data', type=str, default='data/imagenet',
                         help='location of the data corpus')
     # optimization
     parser.add_argument('--batch_size', type=int, default=32,
@@ -361,7 +361,7 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay_norm_anneal', action='store_true', default=False,
                         help='This flag enables annealing the lambda coefficient from '
                              '--weight_decay_norm_init to --weight_decay_norm.')
-    parser.add_argument('--epochs', type=int, default=32,
+    parser.add_argument('--epochs', type=int, default=15,
                         help='num of training epochs')
     parser.add_argument('--warmup_epochs', type=int, default=5,
                         help='num of training epochs in which lr is warmed up')
