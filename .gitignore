@@ -5,3 +5,5 @@ visualizations/
 *.pdf
 data/
 results/
+imagenetlmbtest/data.mdb
+imagenetlmbtest/lock.mdb

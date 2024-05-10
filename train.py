@@ -345,7 +345,7 @@ if __name__ == '__main__':
     parser.add_argument('--data', type=str, default='data/metfaces',
                         help='location of the data corpus')
     # optimization
-    parser.add_argument('--batch_size', type=int, default=16,
+    parser.add_argument('--batch_size', type=int, default=4,
                         help='batch size per GPU')
     parser.add_argument('--learning_rate', type=float, default=1e-2,
                         help='init learning rate')
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay_norm_anneal', action='store_true', default=False,
                         help='This flag enables annealing the lambda coefficient from '
                              '--weight_decay_norm_init to --weight_decay_norm.')
-    parser.add_argument('--epochs', type=int, default=500,
+    parser.add_argument('--epochs', type=int, default=1000,
                         help='num of training epochs')
     parser.add_argument('--warmup_epochs', type=int, default=5,
                         help='num of training epochs in which lr is warmed up')
