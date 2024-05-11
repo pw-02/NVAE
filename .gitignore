@@ -8,3 +8,5 @@ results/
 imagenetlmbtest/data.mdb
 imagenetlmbtest/lock.mdb
 gen_images/
+example_imgs/
+composite_image_nvae_cifar.jpg

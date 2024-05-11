@@ -126,7 +126,7 @@ def main(eval_args):
                         # Convert the image from a tensor/array to a PIL Image
                         img_pil = Image.fromarray((img * 255).astype(np.uint8).transpose(1, 2, 0))
                         # Save as PNG (could be JPEG or another format if preferred)
-                        img_path = os.path.join("gen_images/cifar10", f'image_{batch_num * batch_size + i + 1}.png')
+                        img_path = os.path.join("is_images", f'image_{batch_num * batch_size + i + 1}.png')
                         img_pil.save(img_path)
 
         end_time = time()
@@ -177,11 +177,11 @@ def main(eval_args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('encoder decoder examiner')
     # experimental results
-    parser.add_argument('--checkpoint', type=str, default='results/eval-exp-cifar10/checkpoint.pt',
+    parser.add_argument('--checkpoint', type=str, default='C:\\Users\\pw\\Desktop\\NVAE\\eval-ciafr10_exp\\checkpoint.pt',
                         help='location of the checkpoint')
     parser.add_argument('--save', type=str, default='eval_results',
                         help='location of the checkpoint')
-    parser.add_argument('--eval_mode', type=str, default='evaluate_is', choices=['sample', 'evaluate', 'evaluate_fid'],
+    parser.add_argument('--eval_mode', type=str, default='evaluate_is', choices=['sample', 'evaluate', 'evaluate_fid','evaluate_is'],
                         help='evaluation mode. you can choose between sample or evaluate.')
     parser.add_argument('--eval_on_train', action='store_true', default=False,
                         help='Settings this to true will evaluate the model on training data.')
