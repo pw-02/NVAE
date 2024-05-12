@@ -177,7 +177,7 @@ def main(eval_args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('encoder decoder examiner')
     # experimental results
-    parser.add_argument('--checkpoint', type=str, default='/home/pwatters/projects/NVAE/results/eval-exp-imagenet_32/checkpoint.pt',
+    parser.add_argument('--checkpoint', type=str, default='/home/pwatters/projects/NVAE/results/eval-exp-metfaces/checkpoint.pt',
                         help='location of the checkpoint')
     parser.add_argument('--save', type=str, default='eval_results',
                         help='location of the checkpoint')
