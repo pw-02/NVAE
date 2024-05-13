@@ -177,7 +177,7 @@ def main(eval_args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('encoder decoder examiner')
     # experimental results
-    parser.add_argument('--checkpoint', type=str, default='/home/pwatters/projects/NVAE/results/eval-exp-imagenet_32/checkpoint.pt',
+    parser.add_argument('--checkpoint', type=str, default='/home/pwatters/projects/NVAE/results/eval-exp-metfaces/checkpoint.pt',
                         help='location of the checkpoint')
     parser.add_argument('--save', type=str, default='eval_results',
                         help='location of the checkpoint')
@@ -185,7 +185,7 @@ if __name__ == '__main__':
                         help='evaluation mode. you can choose between sample or evaluate.')
     parser.add_argument('--eval_on_train', action='store_true', default=False,
                         help='Settings this to true will evaluate the model on training data.')
-    parser.add_argument('--data', type=str, default='data/imagenet',
+    parser.add_argument('--data', type=str, default='data/metfaces',
                         help='location of the data corpus')
     parser.add_argument('--readjust_bn', action='store_true', default=False,
                         help='adding this flag will enable readjusting BN statistics.')
@@ -193,7 +193,7 @@ if __name__ == '__main__':
                         help='The temperature used for sampling.')
     parser.add_argument('--num_iw_samples', type=int, default=50000,
                         help='The number of IW samples used in test_ll mode.')
-    parser.add_argument('--fid_dir', type=str, default='fid-stats/imagenet',
+    parser.add_argument('--fid_dir', type=str, default='fid-stats/metfaces',
                         help='path to directory where fid related files are stored')
     parser.add_argument('--batch_size', type=int, default=0,
                         help='Batch size used during evaluation. If set to zero, training batch size is used.')
