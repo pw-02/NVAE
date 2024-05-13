@@ -126,7 +126,7 @@ def main(eval_args):
                         # Convert the image from a tensor/array to a PIL Image
                         img_pil = Image.fromarray((img * 255).astype(np.uint8).transpose(1, 2, 0))
                         # Save as PNG (could be JPEG or another format if preferred)
-                        img_path = os.path.join("is_images", "imagenet" f'image_{batch_num * batch_size + i + 1}.png')
+                        img_path = os.path.join("is_images/imagenet", f'image_{batch_num * batch_size + i + 1}.png')
                         img_pil.save(img_path)
 
         end_time = time()
