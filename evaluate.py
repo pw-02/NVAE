@@ -177,7 +177,7 @@ def main(eval_args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('encoder decoder examiner')
     # experimental results
-    parser.add_argument('--checkpoint', type=str, default='/home/pwatters/projects/NVAE/results/eval-exp-metfaces/checkpoint.pt',
+    parser.add_argument('--checkpoint', type=str, default='/home/pwatters/projects/NVAE/results/eval-exp-imagenet_32/checkpoint.pt',
                         help='location of the checkpoint')
     parser.add_argument('--save', type=str, default='eval_results',
                         help='location of the checkpoint')
@@ -185,7 +185,7 @@ if __name__ == '__main__':
                         help='evaluation mode. you can choose between sample or evaluate.')
     parser.add_argument('--eval_on_train', action='store_true', default=False,
                         help='Settings this to true will evaluate the model on training data.')
-    parser.add_argument('--data', type=str, default='data',
+    parser.add_argument('--data', type=str, default='data/imagenet',
                         help='location of the data corpus')
     parser.add_argument('--readjust_bn', action='store_true', default=False,
                         help='adding this flag will enable readjusting BN statistics.')
