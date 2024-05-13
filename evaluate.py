@@ -193,7 +193,7 @@ if __name__ == '__main__':
                         help='The temperature used for sampling.')
     parser.add_argument('--num_iw_samples', type=int, default=50000,
                         help='The number of IW samples used in test_ll mode.')
-    parser.add_argument('--fid_dir', type=str, default='fid-stats',
+    parser.add_argument('--fid_dir', type=str, default='fid-stats/imagenet',
                         help='path to directory where fid related files are stored')
     parser.add_argument('--batch_size', type=int, default=0,
                         help='Batch size used during evaluation. If set to zero, training batch size is used.')
