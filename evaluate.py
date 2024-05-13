@@ -181,7 +181,7 @@ if __name__ == '__main__':
                         help='location of the checkpoint')
     parser.add_argument('--save', type=str, default='eval_results',
                         help='location of the checkpoint')
-    parser.add_argument('--eval_mode', type=str, default='evaluate_fid', choices=['sample', 'evaluate', 'evaluate_fid','evaluate_is'],
+    parser.add_argument('--eval_mode', type=str, default='evaluate_is', choices=['sample', 'evaluate', 'evaluate_fid','evaluate_is'],
                         help='evaluation mode. you can choose between sample or evaluate.')
     parser.add_argument('--eval_on_train', action='store_true', default=False,
                         help='Settings this to true will evaluate the model on training data.')
