@@ -48,7 +48,7 @@ def calculate_inception_score(data_loader, model, num_splits=10):
 
 # Argument parser for command-line arguments
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument('--image-path', type=str, help='Path to the folder containing generated images', default='is_images')
+parser.add_argument('--image-path', type=str, help='Path to the folder containing generated images', default='is_images/imagenet')
 parser.add_argument('--num-splits', type=int, default=10, help='Number of splits for IS calculation')
 parser.add_argument('--batch-size', type=int, default=50, help='Batch size for data loading')
 
