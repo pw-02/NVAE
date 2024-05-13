@@ -46,8 +46,8 @@ def resize_and_concat_images(image_paths, output_path, target_size=(128, 128)):
 # Example usage:
 
 # Example usage:
-folder_path = "example_imgs\\nvae\\cifar"  # Specify the correct folder path
-output_path = "composite_image_nvae_cifar.jpg"
+folder_path = "example_imgs\stylegan3\metfaces"  # Specify the correct folder path
+output_path = os.path.join(folder_path, "composite_image_stylegan3_imagenet.jpg")
 
 # Get the first five image files from the folder
 image_paths = get_first_five_images(folder_path)

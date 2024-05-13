@@ -32,17 +32,17 @@ def main(args):
 if __name__ == '__main__':
     # python precompute_fid_statistics.py --dataset cifar10
     parser = argparse.ArgumentParser('')
-    parser.add_argument('--dataset', type=str, default='imagenet_32',
+    parser.add_argument('--dataset', type=str, default='metfaces',
                         choices=['cifar10', 'celeba_64', 'celeba_256', 'omniglot', 'mnist',
                                  'imagenet_32', 'ffhq', 'lsun_bedroom_128', 'lsun_church_256'],
                         help='which dataset to use')
-    parser.add_argument('--data', type=str, default='data/imagenet',
+    parser.add_argument('--data', type=str, default='data/metfaces',
                         help='location of the data corpus')
     parser.add_argument('--batch_size', type=int, default=64,
                         help='batch size per GPU')
     parser.add_argument('--max_samples', type=int, default=50000,
                         help='batch size per GPU')
-    parser.add_argument('--fid_dir', type=str, default='fid-stats/imagenet',
+    parser.add_argument('--fid_dir', type=str, default='fid-stats/metfaces',
                         help='A dir to store fid related files')
 
     args = parser.parse_args()
